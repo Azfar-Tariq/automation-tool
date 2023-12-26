@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Tabs, TabsHeader, Tab } from "@material-tailwind/react";
 import Image from "next/image";
 import Logo from "../../assets/facebook.png";
+import axios from "axios";
 
 export default function Facebook() {
   const [username, setUsername] = useState("");
@@ -78,23 +79,39 @@ export default function Facebook() {
     }
   };
 
-  const handleSubmit = () => {
-    console.log("Username:", username);
-    console.log("Password:", password);
-    console.log("Group ID:", groupId);
-    switch (activeTabLabel) {
-      case "Publish":
-        console.log("Posts:", publish);
-        break;
-      case "Comment":
-        console.log("No of Posts:", comment);
-        break;
-      case "Private Messages":
-        console.log("No of Accounts:", privateMessage);
-        break;
-      default:
-        break;
+  const handleSubmit = async () => {
+    if (isButtonDisabled()) {
+      return;
     }
+
+    const dataToSend = {
+      username,
+      password,
+      groupId,
+      [activeTabLabel.toLowerCase()]:
+        activeTabLabel === "Publish"
+          ? publish
+          : activeTabLabel === "Comment"
+          ? comment
+          : privateMessage,
+    };
+
+    try {
+      const response = await axios.post(
+        "https://jsonplaceholder.typicode.com/posts", // Replace with your actual API endpoint
+        dataToSend,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("Data Sent Successfully");
+      console.log("Data: ", response.data);
+    } catch (error) {
+      console.error("Error:", error.message);
+    }
+
     setUsername("");
     setPassword("");
     setGroupId([]);
@@ -106,14 +123,14 @@ export default function Facebook() {
   return (
     <main className="flex flex-col items-center justify-center h-screen">
       <Image
-        className="rounded-full shadow-xl mb-2"
+        className="rounded-full shadow-xl mb-4"
         src={Logo}
         alt="Facebook"
-        width={85}
+        width={90}
       />
       <Tabs value={activeTab}>
         <TabsHeader
-          className="rounded-none border-b border-blue-gray-50 bg-transparent p-0"
+          className="rounded-none border-blue-gray-50 bg-transparent p-0"
           indicatorProps={{
             className:
               "bg-transparent border-b-2 border-gray-900 shadow-none rounded-none",
@@ -138,7 +155,7 @@ export default function Facebook() {
         </TabsHeader>
         <label
           htmlFor="username"
-          className="block mb-1 mt-2 text-sm font-medium text-gray-900"
+          className="block mb-1 mt-2 text-base font-medium text-gray-900"
         >
           Username
         </label>
@@ -147,12 +164,12 @@ export default function Facebook() {
           id="username"
           value={username}
           onChange={handleUsernameChange}
-          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg w-full mb-2 p-2"
+          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg w-full mb-3 p-2"
           required
         />
         <label
           htmlFor="password"
-          className="block mb-1 text-sm font-medium text-gray-900"
+          className="block mb-1 text-base font-medium text-gray-900"
         >
           Password
         </label>
@@ -161,12 +178,12 @@ export default function Facebook() {
           id="password"
           value={password}
           onChange={handlePasswordChange}
-          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg w-full mb-2 p-2"
+          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg w-full mb-3 p-2"
           required
         />
         <label
           htmlFor="groupId"
-          className="block mb-1 text-sm font-medium text-gray-900"
+          className="block mb-1 text-base font-medium text-gray-900"
         >
           Group ID <small>(comma separated)</small>
         </label>
@@ -175,19 +192,19 @@ export default function Facebook() {
           id="groupId"
           value={groupId}
           onChange={handleGroupIdChange}
-          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg w-full mb-2 p-2"
+          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg w-full mb-3 p-2"
           required
         />
         <label
           htmlFor="choice"
-          className="block mb-1 text-sm font-medium text-gray-900"
+          className="block mb-1 text-base font-medium text-gray-900"
         >
           {activeTabLabel == "Comment"
             ? "No of Posts"
             : "" || activeTabLabel == "Private Messages"
             ? "No of Accounts"
             : "" || activeTabLabel == "Publish"
-            ? "Posts"
+            ? "Text"
             : ""}
         </label>
         <input
@@ -202,13 +219,13 @@ export default function Facebook() {
               : ""
           }
           onChange={handleChoiceChange}
-          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg w-full mb-2 p-2"
+          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg w-full mb-3 p-2"
           required
         />
         <div className="flex justify-center">
           <button
             type="submit"
-            className={`text-white bg-blue-600 hover:bg-blue-700 rounded-lg text-sm px-4 py-2 my-2 text-center ${
+            className={`text-white bg-blue-600 hover:bg-blue-700 rounded-lg text-lg font-semibold px-5 py-2 my-2 text-center ${
               isButtonDisabled() ? "opacity-50 cursor-not-allowed" : ""
             }`}
             onClick={handleSubmit}

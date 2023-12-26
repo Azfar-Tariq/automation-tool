@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Logo from "../../assets/instagram.jpeg";
+import axios from "axios";
 
 export default function Instagram() {
   const [username, setUsername] = useState("");
@@ -66,18 +67,35 @@ export default function Instagram() {
     (commentChecked && !comment) ||
     (privateMessageChecked && !privateMessage);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (isButtonDisabled) {
       return;
-    } else {
-      console.log("username", username);
-      console.log("password", password);
-      console.log("hashtag", hashtag);
-      console.log("comment", comment);
-      console.log("privateMessage", privateMessage);
-      console.log("commentChecked", commentChecked);
-      console.log("privateMessageChecked", privateMessageChecked);
     }
+
+    const data = {
+      username,
+      password,
+      hashtag,
+      comment: commentChecked ? comment : "",
+      privateMessage: privateMessageChecked ? privateMessage : "",
+    };
+
+    try {
+      const response = await axios.post(
+        "https://jsonplaceholder.typicode.com/posts",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("Data Sent Successfully");
+      console.log("Data: ", response.data);
+    } catch (error) {
+      console.error("Error: ", error.message);
+    }
+
     setUsername("");
     setPassword("");
     setHashtag("");
@@ -90,15 +108,15 @@ export default function Instagram() {
   return (
     <main className="flex flex-col items-center justify-center h-screen">
       <Image
-        className="rounded-full shadow-xl mb-2"
+        className="rounded-full shadow-xl mb-4"
         src={Logo}
         alt="Facebook"
-        width={85}
+        width={90}
       />
       <div className="w-96">
         <label
           htmlFor="username"
-          className="block mb-1 mt-2 text-sm font-medium text-gray-900"
+          className="block mb-1 mt-2 text-base font-medium text-gray-900"
         >
           Username
         </label>
@@ -107,12 +125,12 @@ export default function Instagram() {
           id="username"
           value={username}
           onChange={handleUsernameChange}
-          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg w-full mb-2 p-2"
+          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg w-full mb-3 p-2"
           required={!isButtonDisabled}
         />
         <label
           htmlFor="password"
-          className="block mb-1 text-sm font-medium text-gray-900"
+          className="block mb-1 text-base font-medium text-gray-900"
         >
           Password
         </label>
@@ -121,12 +139,12 @@ export default function Instagram() {
           id="password"
           value={password}
           onChange={handlePasswordChange}
-          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg w-full mb-2 p-2"
+          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg w-full mb-3 p-2"
           required={!isButtonDisabled}
         />
         <label
           htmlFor="hashtag"
-          className="block mb-1 text-sm font-medium text-gray-900"
+          className="block mb-1 text-base font-medium text-gray-900"
         >
           Hashtags
         </label>
@@ -134,12 +152,12 @@ export default function Instagram() {
           id="hashtag"
           value={hashtag}
           onChange={handleHashtagChange}
-          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg w-full mb-2 p-2"
+          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg w-full mb-3 p-2"
           required={!isButtonDisabled}
         />
         <label
           htmlFor="comment"
-          className="block mb-1 text-sm font-medium text-gray-900"
+          className="block mb-1 text-base font-medium text-gray-900"
         >
           Comment
         </label>
@@ -147,7 +165,7 @@ export default function Instagram() {
           id="comment"
           value={comment}
           onChange={handleCommentChange}
-          className={`shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg w-full mb-2 p-2 ${
+          className={`shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg w-full mb-3 p-2 ${
             isCommentDisabled ? "opacity-60 cursor-not-allowed" : ""
           }`}
           required={commentChecked}
@@ -155,7 +173,7 @@ export default function Instagram() {
         />
         <label
           htmlFor="private-message"
-          className="block mb-1 text-sm font-medium text-gray-900"
+          className="block mb-1 text-base font-medium text-gray-900"
         >
           Private Message
         </label>
@@ -163,33 +181,33 @@ export default function Instagram() {
           id="private-message"
           value={privateMessage}
           onChange={handlePrivateMessageChange}
-          className={`shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg w-full mb-2 p-2 ${
+          className={`shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg w-full mb-3 p-2 ${
             isPrivateMessageDisabled ? "opacity-60 cursor-not-allowed" : ""
           }`}
           required={privateMessageChecked}
           disabled={isPrivateMessageDisabled}
         />
         <div className="flex justify-center items-center">
-          <label htmlFor="comment-checkbox" className="text-gray-900 text-sm">
+          <label htmlFor="comment-checkbox" className="text-gray-900 text-base">
             Comment
           </label>
           <input
             type="checkbox"
             id="comment-checkbox"
-            className="m-2 w-3"
+            className="m-2 w-4 h-4"
             checked={commentChecked}
             onChange={handleCommentCheckboxChange}
           />
           <label
             htmlFor="private-message-checkbox"
-            className="text-gray-900 text-sm"
+            className="text-gray-900 text-base"
           >
             Private Message
           </label>
           <input
             type="checkbox"
             id="private-message-checkbox"
-            className="m-2 w-3"
+            className="m-2 w-4 h-4"
             checked={privateMessageChecked}
             onChange={handlePrivateMessageCheckboxChange}
           />
@@ -197,7 +215,7 @@ export default function Instagram() {
         <div className="flex justify-center">
           <button
             type="submit"
-            className={`text-white bg-blue-600 hover:bg-blue-700 rounded-lg text-sm px-4 py-2 my-2 text-center ${
+            className={`text-white bg-blue-600 hover:bg-blue-700 rounded-lg text-lg font-semibold px-5 py-2 my-2 text-center ${
               isButtonDisabled ? "opacity-50 cursor-not-allowed" : ""
             }`}
             onClick={handleSubmit}

@@ -1,67 +1,91 @@
-import Image from "next/image";
-import Link from "next/link";
-import React from "react";
-import Facebook from "../assets/facebook.png";
-import Instagram from "../assets/instagram.jpeg";
-import Tick from "../assets/tick.svg";
+"use client";
 
-export default function Logins() {
+import React, { useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+  };
+
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  };
+
+  const handleSubmit = () => {
+    if (email === "admin" && password === "admin123") {
+      window.location.href = "/options";
+    } else {
+      toast.error("Invalid Credentials");
+      console.log("Invalid Credentials");
+    }
+  };
+
   return (
-    <main className="flex items-center justify-center h-screen bg-gray-100">
-      <div className="relative bg-white py-6 px-6 mx-6 rounded-3xl w-64 my-4 shadow-xl">
-        <Image
-          className="flex items-center absolute rounded-full shadow-xl left-6 -top-6"
-          src={Facebook}
-          alt="Facebook"
-          width={60}
-        />
-        <div className="mt-8">
-          <p className="text-xl font-semibold my-2">Facebook</p>
-          <div className="border-t-2"></div>
-          <div className="flex space-x-2 text-gray-400 text-sm my-3">
-            <Image src={Tick} alt="Tick" width={15} height={15} />
-            <p>Schedule Posts</p>
+    <div>
+      <ToastContainer />
+      <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
+        <div className="relative py-3 sm:max-w-xl sm:mx-auto">
+          <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-sky-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
+          <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
+            <div className="max-w-md mx-auto">
+              <div>
+                <h1 className="text-2xl font-semibold">Login</h1>
+              </div>
+              <div className="divide-y divide-gray-200">
+                <div className="pt-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
+                  <div className="relative">
+                    <input
+                      id="email"
+                      name="email"
+                      type="text"
+                      value={email}
+                      onChange={handleEmailChange}
+                      className="peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:borer-rose-600"
+                      placeholder="Email address"
+                    />
+                    <label
+                      htmlFor="email"
+                      className="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm"
+                    >
+                      Email Address
+                    </label>
+                  </div>
+                  <div className="relative">
+                    <input
+                      id="password"
+                      name="password"
+                      type="password"
+                      value={password}
+                      onChange={handlePasswordChange}
+                      className="peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:borer-rose-600"
+                      placeholder="Password"
+                    />
+                    <label
+                      htmlFor="password"
+                      className="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm"
+                    >
+                      Password
+                    </label>
+                  </div>
+                  <div className="flex justify-center">
+                    <button
+                      onClick={handleSubmit}
+                      className="bg-cyan-500 text-white font-semibold rounded-md mt-4 px-4 py-2 hover:bg-cyan-600 hover:ease-in-out hover:transition hover:duration-300"
+                    >
+                      Submit
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="flex space-x-2 text-gray-400 text-sm my-3">
-            <Image src={Tick} alt="Tick" width={15} height={15} />
-            <p>Group Engagement</p>
-          </div>
-          <div className="flex space-x-2 text-gray-400 text-sm my-3">
-            <Image src={Tick} alt="Tick" width={15} height={15} />
-            <p>Private Messaging</p>
-          </div>
-          <Link href="/login/facebook">
-            <button className=" text-white bg-[#1877F2] py-2 px-6 hover:bg-[#045ccf] rounded text-md">
-              Login with Facebook
-            </button>
-          </Link>
         </div>
       </div>
-      <div className="relative bg-white py-6 px-6 mx-6 rounded-3xl w-64 my-4 shadow-xl">
-        <Image
-          className="flex items-center absolute rounded-full shadow-xl left-6 -top-6"
-          src={Instagram}
-          alt="Instagram"
-          width={60}
-        />
-        <div className="mt-8">
-          <p className="text-xl font-semibold my-2">Instagram</p>
-          <div className="border-t-2"></div>
-          <div className="flex space-x-2 text-gray-400 text-sm my-3">
-            <Image src={Tick} alt="Tick" width={15} height={15} />
-            <p>Strategic Comments</p>
-          </div>
-          <div className="flex space-x-2 text-gray-400 text-sm my-3">
-            <Image src={Tick} alt="Tick" width={15} height={15} />
-            <p>Direct Messaging</p>
-          </div>
-          <Link href="/login/instagram">
-            <button className=" text-white bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 py-2 px-6 rounded text-md hover:opacity-80">
-              Login with Instagram
-            </button>
-          </Link>
-        </div>
-      </div>
-    </main>
+    </div>
   );
 }
