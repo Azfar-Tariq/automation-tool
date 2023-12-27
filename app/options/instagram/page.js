@@ -4,10 +4,14 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Logo from "../../assets/instagram.jpeg";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Instagram() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [limit, setLimit] = useState("");
   const [hashtag, setHashtag] = useState("");
   const [comment, setComment] = useState("");
   const [privateMessage, setPrivateMessage] = useState("");
@@ -20,6 +24,14 @@ export default function Instagram() {
 
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
+  };
+
+  const handleTogglePassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleLimitChange = (event) => {
+    setLimit(event.target.value);
   };
 
   const handleHashtagChange = (event) => {
@@ -63,6 +75,7 @@ export default function Instagram() {
     !(commentChecked || privateMessageChecked) ||
     !username ||
     !password ||
+    !limit ||
     !hashtag ||
     (commentChecked && !comment) ||
     (privateMessageChecked && !privateMessage);
@@ -75,6 +88,7 @@ export default function Instagram() {
     const data = {
       username,
       password,
+      limit,
       hashtag,
       comment: commentChecked ? comment : "",
       privateMessage: privateMessageChecked ? privateMessage : "",
@@ -90,7 +104,9 @@ export default function Instagram() {
           },
         }
       );
-      console.log("Data Sent Successfully");
+      toast.success(
+        "Request Recieved. You will be notified through email at the end of the campaign."
+      );
       console.log("Data: ", response.data);
     } catch (error) {
       console.error("Error: ", error.message);
@@ -98,6 +114,7 @@ export default function Instagram() {
 
     setUsername("");
     setPassword("");
+    setLimit("");
     setHashtag("");
     setComment("");
     setPrivateMessage("");
@@ -107,8 +124,9 @@ export default function Instagram() {
 
   return (
     <main className="flex flex-col items-center justify-center h-screen">
+      <ToastContainer />
       <Image
-        className="rounded-full shadow-xl mb-4"
+        className="rounded-full shadow-xl mt-40 mb-4"
         src={Logo}
         alt="Facebook"
         width={90}
@@ -130,15 +148,62 @@ export default function Instagram() {
         />
         <label
           htmlFor="password"
-          className="block mb-1 text-base font-medium text-gray-900"
+          className="block mb-1 text-base font-medium text-gray-900 relative"
         >
           Password
+          <input
+            type={showPassword ? "text" : "password"}
+            id="password"
+            value={password}
+            onChange={handlePasswordChange}
+            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg w-full mb-3 p-2"
+            required={!isButtonDisabled}
+          />
+          <div
+            onClick={handleTogglePassword}
+            className="absolute right-2 top-[43px] transform -translate-y-1/2 cursor-pointer"
+          >
+            {showPassword ? (
+              <svg
+                onClick={handleTogglePassword}
+                className="relative"
+                xmlns="http://www.w3.org/2000/svg"
+                width="32"
+                height="32"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="currentColor"
+                  d="M12 9a3 3 0 0 1 3 3a3 3 0 0 1-3 3a3 3 0 0 1-3-3a3 3 0 0 1 3-3m0-4.5c5 0 9.27 3.11 11 7.5c-1.73 4.39-6 7.5-11 7.5S2.73 16.39 1 12c1.73-4.39 6-7.5 11-7.5M3.18 12a9.821 9.821 0 0 0 17.64 0a9.821 9.821 0 0 0-17.64 0"
+                />
+              </svg>
+            ) : (
+              <svg
+                onClick={handleTogglePassword}
+                className="relative"
+                xmlns="http://www.w3.org/2000/svg"
+                width="32"
+                height="32"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="currentColor"
+                  d="M2 5.27L3.28 4L20 20.72L18.73 22l-3.08-3.08c-1.15.38-2.37.58-3.65.58c-5 0-9.27-3.11-11-7.5c.69-1.76 1.79-3.31 3.19-4.54zM12 9a3 3 0 0 1 3 3a3 3 0 0 1-.17 1L11 9.17A3 3 0 0 1 12 9m0-4.5c5 0 9.27 3.11 11 7.5a11.79 11.79 0 0 1-4 5.19l-1.42-1.43A9.862 9.862 0 0 0 20.82 12A9.821 9.821 0 0 0 12 6.5c-1.09 0-2.16.18-3.16.5L7.3 5.47c1.44-.62 3.03-.97 4.7-.97M3.18 12A9.821 9.821 0 0 0 12 17.5c.69 0 1.37-.07 2-.21L11.72 15A3.064 3.064 0 0 1 9 12.28L5.6 8.87c-.99.85-1.82 1.91-2.42 3.13"
+                />
+              </svg>
+            )}
+          </div>
+        </label>
+        <label
+          htmlFor="limit"
+          className="block mb-1 text-base font-medium text-gray-900"
+        >
+          Limit
         </label>
         <input
-          type="password"
-          id="password"
-          value={password}
-          onChange={handlePasswordChange}
+          id="limit"
+          value={limit}
+          onChange={handleLimitChange}
           className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg w-full mb-3 p-2"
           required={!isButtonDisabled}
         />
