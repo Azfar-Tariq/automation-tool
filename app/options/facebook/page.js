@@ -135,11 +135,12 @@ export default function Facebook() {
           headers: {
             "Content-Type": "application/json",
           },
-        }
+        },
+        toast.success(
+          "Request Recieved. You will be notified through email at the end of the campaign."
+        )
       );
-      toast.success(
-        "Request Recieved. You will be notified through email at the end of the campaign."
-      );
+
       console.log("Data: ", response.data);
     } catch (error) {
       console.error("Error:", error.message);
