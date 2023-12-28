@@ -16,6 +16,7 @@ export default function Facebook() {
   const [publish, setPublish] = useState("");
   const [comment, setComment] = useState("");
   const [privateMessage, setPrivateMessage] = useState("");
+  const [limit, setLimit] = useState("");
   const [activeTab, setActiveTab] = useState("publish");
   const data = [
     {
@@ -73,14 +74,30 @@ export default function Facebook() {
     }
   };
 
+  const handleLimitChange = (event) => {
+    setLimit(event.target.value);
+  };
+
   const isButtonDisabled = () => {
     switch (activeTabLabel) {
       case "Publish":
         return !(username && password && groupId.length > 0 && publish);
       case "Comment":
-        return !(username && password && groupId.length > 0 && comment);
+        return !(
+          username &&
+          password &&
+          groupId.length > 0 &&
+          comment &&
+          limit
+        );
       case "Private Messages":
-        return !(username && password && groupId.length > 0 && privateMessage);
+        return !(
+          username &&
+          password &&
+          groupId.length > 0 &&
+          privateMessage &&
+          limit
+        );
       default:
         return false;
     }
@@ -91,7 +108,7 @@ export default function Facebook() {
       return;
     }
 
-    const dataToSend = {
+    let dataToSend = {
       username,
       password,
       groupId,
@@ -102,6 +119,13 @@ export default function Facebook() {
           ? comment
           : privateMessage,
     };
+
+    if (activeTabLabel === "Comment" || activeTabLabel === "Private Messages") {
+      dataToSend = {
+        ...dataToSend,
+        limit,
+      };
+    }
 
     try {
       const response = await axios.post(
@@ -127,13 +151,14 @@ export default function Facebook() {
     setPublish("");
     setComment("");
     setPrivateMessage("");
+    setLimit("");
   };
 
   return (
     <main className="flex flex-col items-center justify-center h-screen">
       <ToastContainer />
       <Image
-        className="rounded-full shadow-xl mb-4"
+        className="rounded-full shadow-xl mb-4 mt-6"
         src={Logo}
         alt="Facebook"
         width={90}
@@ -266,6 +291,25 @@ export default function Facebook() {
           className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg w-full mb-3 p-2"
           required
         />
+        <label
+          htmlFor="limit"
+          className="block mb-1 text-base font-medium text-gray-900"
+        >
+          {activeTabLabel == "Comment" || activeTabLabel == "Private Messages"
+            ? "Limit"
+            : ""}
+        </label>
+        {activeTabLabel == "Comment" || activeTabLabel == "Private Messages" ? (
+          <input
+            id="limit"
+            value={limit}
+            onChange={handleLimitChange}
+            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg w-full mb-3 p-2"
+            required
+          />
+        ) : (
+          <div></div>
+        )}
         <div className="flex justify-center">
           <button
             type="submit"

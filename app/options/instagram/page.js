@@ -202,6 +202,7 @@ export default function Instagram() {
         </label>
         <input
           id="limit"
+          type="number"
           value={limit}
           onChange={handleLimitChange}
           className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg w-full mb-3 p-2"
